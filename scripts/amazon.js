@@ -61,7 +61,7 @@ document.querySelector(".js-products-grid").innerHTML = productsHtml;
 
 
 //function-call to updateCart quantity
-function updateCartQuantity(){
+export function updateCartQuantity(){
     let cartQuantity = 0;
         //calculating the total quantity 
         cart.forEach((cartItem) => {
