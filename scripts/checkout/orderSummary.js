@@ -18,66 +18,68 @@ export function renderOrderSummary(){
   //creating a loop to get the product from the id
   cart.forEach((cartItem) => {
 
-      const productId = cartItem.productId;
+    const productId = cartItem.productId;
 
-      const matchingProduct = getProduct(productId);
+    const matchingProduct = getProduct(productId);
 
-      const deliveryOptionId = cartItem.deliveryOptionId
+    const deliveryOptionId = cartItem.deliveryOptionId
 
-      const deliveryOption = getDeliveryOption(deliveryOptionId);
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-      const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays,
-        'days'
-      );
-      const dateString = deliveryDate.format(
-        'dddd, MMMM, D'
-      );
+    const today = dayjs();
+    const deliveryDate = today.add(
+      deliveryOption.deliveryDays,
+      'days'
+    );
+    const dateString = deliveryDate.format(
+      'dddd, MMMM, D'
+    );
 
-      cartSummaryHtml += 
-        `
-        <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
-            <div class="delivery-date">
-              Delivery Date: ${dateString}
+    cartSummaryHtml += 
+      `
+      <div class="cart-item-container js-cart-item-container-${matchingProduct.id} ">
+          <div class="delivery-date">
+            Delivery Date: ${dateString}
+          </div>
+
+          <div class="cart-item-details-grid">
+            <img class="product-image"
+              src="${matchingProduct.image}">
+
+            <div class="cart-item-details">
+              <div class="product-name">
+                ${matchingProduct.name}
+              </div>
+              <div class="product-price">
+                $${formatCurrency(matchingProduct.priceCents)}
+              </div>
+              <div class="product-quantity">
+                <span>
+                  Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                </span>
+                <span class="update-quantity-link link-primary js-update-link" data-product-id=${matchingProduct.id}>
+                  Update 
+                </span>
+                <input class="quantity-input">
+                <span class="save-quantity-link link-primary">Save</span>
+                <span class="delete-quantity-link link-primary js-delete-link" data-product-id = '${matchingProduct.id}'>
+                  Delete
+                </span>
+              </div>
             </div>
 
-            <div class="cart-item-details-grid">
-              <img class="product-image"
-                src="${matchingProduct.image}">
-
-              <div class="cart-item-details">
-                <div class="product-name">
-                  ${matchingProduct.name}
-                </div>
-                <div class="product-price">
-                  $${formatCurrency(matchingProduct.priceCents)}
-                </div>
-                <div class="product-quantity">
-                  <span>
-                    Quantity: <span class="quantity-label">${cartItem.quantity}</span>
-                  </span>
-                  <span class="update-quantity-link link-primary">
-                    Update
-                  </span>
-                  <span class="delete-quantity-link link-primary js-delete-link" data-product-id = '${matchingProduct.id}'>
-                    Delete
-                  </span>
-                </div>
+            <div class="delivery-options">
+              <div class="delivery-options-title">
+                Choose a delivery option:
               </div>
-
-              <div class="delivery-options">
-                <div class="delivery-options-title">
-                  Choose a delivery option:
-                </div>
-                
-                ${deliveryOptionsHTML(matchingProduct, cartItem)}
-                
-              </div>
+              
+              ${deliveryOptionsHTML(matchingProduct, cartItem)}
+              
             </div>
           </div>
-        `;
-  });
+        </div>
+      `;
+});
 
 
   function deliveryOptionsHTML(matchingProduct, cartItem){
@@ -117,38 +119,49 @@ export function renderOrderSummary(){
     return html;
   }
 
-  document.querySelector('.js-order-summary').innerHTML = cartSummaryHtml;
+document.querySelector('.js-order-summary').innerHTML = cartSummaryHtml;
 
-  document.querySelectorAll('.js-delete-link')
-    .forEach((link) => {
-      link.addEventListener('click', () => {
-        
-        //getting the item to be removed id
-        const productId = link.dataset.productId;
+document.querySelectorAll('.js-delete-link')
+  .forEach((link) => {
+    link.addEventListener('click', () => {
+      
+		//getting the item to be removed id
+		const productId = link.dataset.productId;
+		
+		//function-call to remove the item from the cart
+		removeFromCart(productId);
 
-        //function-call to remove the item from the cart
-        removeFromCart(productId);
+		const container = document.querySelector(
+			`.js-cart-item-container-${productId}`
+		)
 
-        const container = document.querySelector(
-          `.js-cart-item-container-${productId}`
-        )
+		//removing the product from the html
+		container.remove();
 
-        //removing the product from the html
-        container.remove();
+		renderPaymentSummary();
+      
+    });
+})
 
-        renderPaymentSummary();
-        
-      });
-    })
+document.querySelectorAll('.js-update-link').forEach(link => {
+	link.addEventListener('click', () =>{
+		const productId = link.dataset.productId;
 
-    document.querySelectorAll('.js-delivery-option').forEach((element) => {
-      element.addEventListener('click', () => {
-        const {productId, deliveryOptionId} = element.dataset
-        updateDeliveryOption(productId, deliveryOptionId)
-        renderOrderSummary();
-        renderPaymentSummary();
-      })
-    })
+		const container = document.querySelector(
+			`.js-cart-item-container-${productId}`
+		);
+		container.classList.add('is-editing-quantity');
+	})
+})
+
+document.querySelectorAll('.js-delivery-option').forEach((element) => {
+	element.addEventListener('click', () => {
+		const {productId, deliveryOptionId} = element.dataset
+		updateDeliveryOption(productId, deliveryOptionId)
+		renderOrderSummary();
+		renderPaymentSummary();
+	})
+  })
 }
 
 
