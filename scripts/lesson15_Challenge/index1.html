@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <script type="module">
+        import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+        import isWeekend from './scripts/isWeekend.js'
+        
+  
+        // Test this function using a few different dates.
+        let date = dayjs();
+        console.log(date.format('dddd, MMMM D'));
+        console.log(isWeekend(date));
+  
+        date = dayjs().add(2, 'day');
+        console.log(date.format('dddd, MMMM D'));
+        console.log(isWeekend(date));
+  
+        date = dayjs().add(4, 'day');
+        console.log(date.format('dddd, MMMM D'));
+        console.log(isWeekend(date));
+  
+        date = dayjs().add(6, 'day');
+        console.log(date.format('dddd, MMMM D'));
+        console.log(isWeekend(date));
+      </script>
+</body>
+</html>

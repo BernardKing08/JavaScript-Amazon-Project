@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script type="module">
+        import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+  
+        const today = dayjs();
+        const date = today.add(5, 'days');
+        console.log(date.format('MMMM DD'));
+
+        console.log('calculating 1 month from now');
+        const month = today.add(1, 'month');
+        console.log(month.format('MMMM DD')); 
+
+        console.log('using the subtract method in dayjs');
+        const negMonth = today.subtract(1, 'month');
+        console.log(negMonth.format('MMMM DD'))
+
+        console.log('logging name of day of the week')
+        const date2 = dayjs();
+        console.log(date2.format('dddd'));
+
+        function isWeekend(date) {
+            const dayOfWeek = date.format('dddd');
+            return dayOfWeek === 'Saturday' || dayOfWeek === 'Sunday';
+        }
+
+        
+    </script>
+</body>
+</html>
