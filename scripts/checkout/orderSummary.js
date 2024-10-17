@@ -4,6 +4,7 @@ import formatCurrency from '../utlis/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js'
+import { renderCartQuantity } from './cartQuantity.js';
 
 
 const today = dayjs();
@@ -158,16 +159,24 @@ document.querySelectorAll('.js-save-link').forEach(link => {
 	link.addEventListener('click', () => {
 		const productId = link.dataset.productId;
 
-		const container = document.querySelector(
+		const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+		const newQuantity = Number(quantityInput.value);
+
+    if (newQuantity < 0 || newQuantity >= 1000) {
+      alert('Quantity must be at least 0 and less than 1000');
+      return;
+    }
+
+    const container = document.querySelector(
 			`.js-cart-item-container-${productId}`
 		);
 		container.classList.remove('is-editing-quantity');
 
-		const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
-		const newQuantity = Number(quantityInput.value);
-
 		//updating the quantity with the new quantity
 		updateQuantity(productId, newQuantity);
+    renderOrderSummary();
+		renderPaymentSummary();
+    renderCartQuantity();
 	})
 })
 
