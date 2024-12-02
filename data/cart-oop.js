@@ -1,6 +1,7 @@
 function Cart(localStorageKey){
     const cart = {
         cartItems: undefined,
+        
     
         loadFromStorage(){
             this.cartItems = JSON.parse(localStorage.getItem(localStorageKey));
