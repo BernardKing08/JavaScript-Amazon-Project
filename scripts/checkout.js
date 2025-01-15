@@ -1,13 +1,17 @@
 import { renderOrderSummary } from "./checkout/orderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 import { renderCartQuantity } from "./checkout/cartQuantity.js";
-import { loadProducts } from "../data/products.js";
+import { loadProductsFetch } from "../data/products.js";
+import { loadFromStorage } from "../data/cart.js";
 
-new Promise((resolve) => {
-    loadProducts(() => {
-        resolve();
-    });
-}).then(() =>{
+Promise.all([
+    loadProductsFetch(),
+    new Promise((resolve) => {
+        loadFromStorage();
+        resolve(); // Resolve immediately since `loadFromStorage` is synchronous.
+    })
+])
+.then(() => {
     renderOrderSummary();
     renderPaymentSummary();    
     renderCartQuantity();
