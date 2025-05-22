@@ -35,7 +35,15 @@
         <button class="search-button">
           <img class="search-icon" src="images/icons/search-icon.png">
         </button>
+
+        <!-- New Voice Search Button -->
+        <button id="start-voice" class="voice-button">
+          🎤 Voice button
+        </button>
+        <span id="voice-feedback" style="margin-left: 10px; font-size: 0.9rem; color: gray;"></span>
+      
       </div>
+      
 
       <div class="amazon-header-right-section">
         <a class="orders-link header-link" href="orders.html">
@@ -52,6 +60,18 @@
     </div>
     
     <div class="main">
+
+      <p id="voice-instructions" class="hidden" style="font-size: 1rem; color: gray; text-align: center; margin-top: 10px;">
+        Say "Search [Product Name]" to find products.<br> Say "Add [Product Name] to cart" to add a product.<br>Say "Go to Cart" to view your cart.
+      </p>
+      
+      
+      <!--creating a search grid where user searched products would apper
+          before the main products-->
+      <div class="products-search-grid js-products-search-grid">
+        <!--Generating the searched products using js Arrays and objects to represent the products-->
+      </div>
+
       <div class="products-grid js-products-grid">
         <!--Generating the products using js Arrays and objects to represent the products-->
       </div>
@@ -61,6 +81,8 @@
     <!--products in cart-->
     <!--creates the product objects-->
     <script type="module" src="scripts/amazon.js"></script>
+    <!-- Add the voice.js script -->
+    //<script type="module" src="scripts/voice/voice.js"></script>
     
   </body>
 </html>

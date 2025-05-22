@@ -13,6 +13,7 @@
   left: 0;
   right: 0;
   height: 60px;
+  z-index: 100;
 }
 
 .amazon-header-left-section {
@@ -94,6 +95,19 @@
   height: 22px;
   margin-left: 2px;
   margin-top: 3px;
+}
+
+.voice-button {
+  background-color: rgb(254, 189, 105);
+  border: 1px solid rgb(254, 189, 105);
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 0.1;
+}
+
+.voice-button:hover {
+  background-color: #e7e7e7;
 }
 
 .amazon-header-right-section {
