@@ -121,89 +121,108 @@ document.querySelector('.search-bar').addEventListener('input', handleSearch);
 document.querySelector('.search-button').addEventListener('click', handleSearch);
 
 ////////////////voice recognition/////////////////////
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'en-US';
+// const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+// recognition.lang = 'en-US';
+// recognition.onresult = function (event) {
+//   const command = event.results[0][0].transcript.toLowerCase().trim();
+//   document.getElementById('voice-feedback').textContent = `You said: "${command}"`;
 
-recognition.onresult = function (event) {
-  const command = event.results[0][0].transcript.toLowerCase();
-  document.getElementById('voice-feedback').textContent = `You said: "${command}"`;
+//   // Search command
+//   if (command.startsWith("search")) {
+//     let searchTerm = command.replace("search", "").trim().replace(/\.$/, "");
+//     document.querySelector('.search-bar').value = searchTerm;
+//     handleSearch();
+//     return;
+//   }
 
-  // Search command
-  if (command.startsWith("search")) {
-    let searchTerm = command.replace("search", "").trim();
-    let newSearchTerm = searchTerm.replace(/\.$/, "");
-    document.querySelector('.search-bar').value = newSearchTerm; // Set the search bar value
-    handleSearch(); // Trigger the search functionality
-  }
-  // Add to cart command with index support
-  else if (command.match(/^add item \d+$/)) {
-    let index = parseInt(command.replace("add item", "").trim()) - 1;
-    if (index >= 0 && index < products.length) {
-      addToCart(products[index].id);
-      updateCartQuantity();
-      alert(`Added "${products[index].name}" to the cart.`);
-    } else {
-      alert(`Invalid item number: ${index + 1}.`);
-    }
-  }
-  // Remove from cart command with index support
-  else if (command.match(/^remove item \d+$/)) {
-    let index = parseInt(command.replace("remove item", "").trim()) - 1;
-    if (index >= 0 && index < products.length) {
-      const cartItemIndex = cart.findIndex(item => item.productId === products[index].id);
-      if (cartItemIndex !== -1) {
-        cart.splice(cartItemIndex, 1);
-        updateCartQuantity();
-        alert(`Removed "${products[index].name}" from the cart.`);
-      } else {
-        alert(`"${products[index].name}" is not in the cart.`);
-      }
-    } else {
-      alert(`Invalid item number: ${index + 1}.`);
-    }
-  }
-  // Add to cart command using product name
-  else if (command.startsWith("add")) {
-    let productName = command.replace("add", "").replace("to cart", "").trim();
-    productName = productName.replace(/[^\w\s]/g, ""); // Sanitize product name
-    const product = products.find(p => p.name.toLowerCase() === productName);
-    if (product) {
-      addToCart(product.id);
-      updateCartQuantity();
-      alert(`Added "${productName}" to the cart.`);
-    } else {
-      alert(`Product "${productName}" not found.`);
-    }
-  }
-  // Remove from cart command using product name
-  else if (command.startsWith("remove")) {
-    let productName = command.replace("remove", "").replace("from cart", "").trim();
-    productName = productName.replace(/[^\w\s]/g, ""); // Sanitize product name
-    const cartItemIndex = cart.findIndex(item => {
-      const product = products.find(p => p.id === item.productId);
-      return product && product.name.toLowerCase() === productName;
-    });
-    if (cartItemIndex !== -1) {
-      cart.splice(cartItemIndex, 1);
-      updateCartQuantity();
-      alert(`Removed "${productName}" from the cart.`);
-    } else {
-      alert(`Product "${productName}" not found in the cart.`);
-    }
-  } else {
-    alert(`Unrecognized command: "${command}"`);
-  }
-};
+//   // Unified ADD logic
+//   if (command.startsWith("add")) {
+//     let remaining = command.replace("add", "").trim(); // Remove 'add'
+
+//     // Case: "add item 5" → Add by index
+//     if (remaining.startsWith("item")) {
+//       remaining = remaining.replace("item", "").trim(); // Remove 'item'
+//       const index = parseInt(remaining) - 1;
+
+//       if (!isNaN(index) && index >= 0 && index < products.length) {
+//         addToCart(products[index].id);
+//         updateCartQuantity();
+//         alert(`Added "${products[index].name}" to the cart.`);
+//       } else {
+//         alert(`Invalid item number: ${index + 1}.`);
+//       }
+//     }
+
+//     // Case: "add milk" → Add by product name
+//     else {
+//       const productName = remaining.replace(/[^\w\s]/g, "").trim(); // Sanitize
+//       const product = products.find(p => p.name.toLowerCase() === productName);
+
+//       if (product) {
+//         addToCart(product.id);
+//         updateCartQuantity();
+//         alert(`Added "${product.name}" to the cart.`);
+//       } else {
+//         alert(`Product "${productName}" not found.`);
+//       }
+//     }
+//     return;
+//   }
+
+//   // Unified REMOVE logic
+//   if (command.startsWith("remove")) {
+//     let remaining = command.replace("remove", "").trim(); // Remove 'remove'
+
+//     if (remaining.startsWith("item")) {
+//       remaining = remaining.replace("item", "").trim(); // Remove 'item'
+//       const index = parseInt(remaining) - 1;
+
+//       if (!isNaN(index) && index >= 0 && index < products.length) {
+//         const cartItemIndex = cart.findIndex(item => item.productId === products[index].id);
+//         if (cartItemIndex !== -1) {
+//           cart.splice(cartItemIndex, 1);
+//           updateCartQuantity();
+//           alert(`Removed "${products[index].name}" from the cart.`);
+//         } else {
+//           alert(`"${products[index].name}" is not in the cart.`);
+//         }
+//       } else {
+//         alert(`Invalid item number: ${index + 1}.`);
+//       }
+//     }
+
+//     // Case: remove by name (e.g., "remove milk")
+//     else {
+//       const productName = remaining.replace(/[^\w\s]/g, "").trim(); // Sanitize
+//       const cartItemIndex = cart.findIndex(item => {
+//         const product = products.find(p => p.id === item.productId);
+//         return product && product.name.toLowerCase() === productName;
+//       });
+
+//       if (cartItemIndex !== -1) {
+//         cart.splice(cartItemIndex, 1);
+//         updateCartQuantity();
+//         alert(`Removed "${productName}" from the cart.`);
+//       } else {
+//         alert(`Product "${productName}" not found in the cart.`);
+//       }
+//     }
+//     return;
+//   }
+
+//   // Fallback
+//   alert(`Unrecognized command: "${command}"`);
+// };
 
 
-recognition.onerror = function (event) {
-  console.error('Speech recognition error:', event.error);
-};
+// recognition.onerror = function (event) {
+//   console.error('Speech recognition error:', event.error);
+// };
 
-document.getElementById('start-voice').addEventListener('click', () => {
-  recognition.start();
-  document.getElementById('voice-feedback').textContent = 'Listening...';
-});
+// document.getElementById('start-voice').addEventListener('click', () => {
+//   recognition.start();
+//   document.getElementById('voice-feedback').textContent = 'Listening...';
+// });
 
 
 //////////// Possible improvement //////////////////
