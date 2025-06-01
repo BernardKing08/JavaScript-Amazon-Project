@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head> 
     <title>Checkout</title>
 
     <!-- This code is needed for responsive design to work.
@@ -32,8 +32,14 @@
           Checkout (<a class="return-to-home-link js-return-to-home-link"
             href="amazon.html"></a>)
         </div>
-
-        <div class="checkout-header-right-section">
+          
+        <div class="checkout-header-right-section" style="display: flex;">
+            <!-- Voice Search Button -->
+          <button id="start-voice" class="voice-button"> 
+            🎤 Voice button
+          </button>
+          <span id="voice-feedback" style="margin-left: 10px; font-size: 0.9rem; color: gray;"></span>
+        
           <img src="images/icons/checkout-lock-icon.png">
         </div>
       </div>
@@ -55,7 +61,10 @@
 
     <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
     <script type="module" src="scripts/checkout.js"></script>
-    
+    <!-- Add the voice js script -->
+     <script type="module" src="scripts/voice/checkout-voice.js"></script>
+
+
 
   </body>
 </html>

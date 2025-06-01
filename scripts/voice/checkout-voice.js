@@ -1,7 +1,5 @@
 import { cart, addToCart, removeFromCart } from '../../data/cart.js';
 import { products } from '../../data/products.js';
-import { handleSearch } from '../amazon.js';
-
 
 // Initialize SpeechRecognition
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -11,14 +9,36 @@ recognition.onresult = function (event) {
   const command = event.results[0][0].transcript.toLowerCase().trim();
   console.log(`You said: "${command}"`);
 
-  // Handle search command
-  if (command.startsWith("search")) {
-    const searchTerm = command.replace("search", "").trim();
-    document.querySelector('.search-bar').value = searchTerm;
-    handleSearch();
+  // Remove item from cart
+  if (command.startsWith("remove")) {
+    let input = command.replace("remove", "").replace("from cart", "").trim();
+
+    if (input.startsWith("item")) {
+      const numberMatch = input.match(/\d+/);
+      if (numberMatch) {
+        const index = parseInt(numberMatch[0]) - 1;
+        if (index >= 0 && index < products.length) {
+          removeFromCart(products[index].id);
+          alert(`"${products[index].name}" removed from cart.`);
+        } else {
+          alert(`Invalid item number: ${index + 1}.`);
+        }
+      } else {
+        alert(`Please specify a valid item number.`);
+      }
+    } else {
+      input = input.replace(/[^\w\s]/g, "");
+      const product = products.find(p => p.name.toLowerCase() === input);
+      if (product) {
+        removeFromCart(product.id);
+        alert(`"${product.name}" removed from cart.`);
+      } else {
+        alert(`Product "${input}" not found in cart.`);
+      }
+    }
   }
-  
-  // Handle add command
+
+  // Add item back to cart
   else if (command.startsWith("add")) {
     let input = command.replace("add", "").replace("to cart", "").trim();
 
@@ -36,7 +56,7 @@ recognition.onresult = function (event) {
         alert(`Please specify a valid item number.`);
       }
     } else {
-      input = input.replace(/[^\w\s]/g, ""); 
+      input = input.replace(/[^\w\s]/g, "");
       const product = products.find(p => p.name.toLowerCase() === input);
       if (product) {
         addToCart(product.id);
@@ -47,32 +67,20 @@ recognition.onresult = function (event) {
     }
   }
 
-  // Handle remove command
-  else if (command.startsWith("remove")) {
-    let input = command.replace("remove", "").replace("from cart", "").trim();
-
-    if (input.startsWith("item")) {
-      const numberMatch = input.match(/\d+/);
-      if (numberMatch) {
-        const index = parseInt(numberMatch[0]) - 1;
-        if (index >= 0 && index < products.length) {
-          removeFromCart(products[index].id);
-          alert(`"${products[index].name}" removed from cart.`);
-        } else {
-          alert(`Invalid item number: ${index + 1}.`);
-        }
-      } else {
-        alert(`Please specify a valid item number.`);
-      }
+  // Navigate to other pages
+  else if (command.includes("go to") || command.includes("open")) {
+    if (command.includes("home")) {
+      window.location.href = 'amazon.html';
+    } else if (command.includes("products") || command.includes("shop")) {
+      window.location.href = 'amazon.html';
+    } else if (command.includes("checkout") || command.includes("cart")) {
+      window.location.href = 'checkout.html';
+    } else if (command.includes("payment")) {
+      window.location.href = 'payment.html';
+    } else if (command.includes("track")) {
+      window.location.href = 'tracking.html';
     } else {
-      input = input.replace(/[^\w\s]/g, ""); // Sanitize
-      const product = products.find(p => p.name.toLowerCase() === input);
-      if (product) {
-        removeFromCart(product.id);
-        alert(`"${product.name}" removed from cart.`);
-      } else {
-        alert(`Product "${input}" not found in cart.`);
-      }
+      alert("Page not recognized. Try saying 'Go to home' or 'Open payment'.");
     }
   }
 };

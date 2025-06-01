@@ -93,11 +93,26 @@
 
 .checkout-header-right-section {
   text-align: right;
-  width: 150px;
+  width: 180px;
 }
 
 @media (max-width: 1000px) {
   .checkout-header-right-section {
     width: auto;
   }
+}
+
+/* Voice css */
+.voice-button {
+  background-color: rgb(254, 189, 105);
+  border: 1px solid rgb(15, 15, 14);
+  border-radius: 4px;
+  margin-left: 20px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px; /* Fix this line: 0.1 is invalid */
+}
+
+.voice-button:hover {
+  background-color: #e7e7e7;
 }
