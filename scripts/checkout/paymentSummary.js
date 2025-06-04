@@ -53,9 +53,11 @@ export function renderPaymentSummary(){
             <div class="payment-summary-money">$${formatCurrency(totalCents)}</div>
           </div>
 
-          <button class="place-order-button button-primary">
+          <button class="place-order-button js-place-order-button button-primary">
             Place your order
           </button>
+          <div class="js-order-success d-none alert alert-success mt-3">Order Placed Successfully!</div>
+
     `
 
     document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHtml;
