@@ -75,7 +75,25 @@ recognition.onresult = function (event) {
       }
     }
   }
+
+  else if (command.includes("go to") || command.includes("open")) {
+    if (command.includes("home")) {
+      window.location.href = 'amazon.html';
+    } else if (command.includes("products") || command.includes("shop")) {
+      window.location.href = 'amazon.html';
+    } else if (command.includes("checkout") || command.includes("cart")) {
+      window.location.href = 'checkout.html';
+    } else if (command.includes("payment")) {
+      window.location.href = 'payment.html';
+    } else if (command.includes("track")) {
+      window.location.href = 'tracking.html';
+    } else {
+      console.log("Page not recognized.");
+    }
+  }
 };
+
+
 
 recognition.onerror = function (event) {
   console.error('Speech recognition error:', event.error);
